@@ -115,5 +115,5 @@ print( new_df)
 new_df = df.sort_values( by = [ 'age' , 'score'] , ascending=[True,False] )
 print (new_df)
 # 컬럼명도 정렬이 가능하다. axis = 0행/1열
-new_df = df.sort_index( by =  axis=1 , ascending=True )
+new_df = df.sort_index( axis=1 , ascending=True )
 print (new_df)
