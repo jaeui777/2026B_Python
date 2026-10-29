@@ -101,14 +101,21 @@ print(df['Grade'].value_counts())
 # 문제 9: 데이터 연결 (Concat)
 # 상반기 지점 실적(df_first)과 하반기 지점 실적(df_second)을 세로(행 방향, axis=0)로 연결하되,
 # 기존 인덱스를 무시하고 새롭게 0부터 번호를 매기는 방식(ignore_index=True)으로 연결하여 출력하시오.
-# df_first = pd.DataFrame({'Code': ['S10', 'S20'], 'Revenue': [500, 750]})
-# df_second = pd.DataFrame({'Code': ['S30', 'S40'], 'Revenue': [620, 890]})
+df_first = pd.DataFrame({'Code': ['S10', 'S20'], 'Revenue': [500, 750]})
+df_second = pd.DataFrame({'Code': ['S30', 'S40'], 'Revenue': [620, 890]})
 
-
+x = pd.concat([df_first, df_second] , axis=0, ignore_index=True)
+print( x )
 
 # 문제 10: 데이터 병합 (Merge)
 # 회원 기본 프로필(df_user)과 최근 주문 내역(df_order)을 'UID' 기준으로 병합하되,
 # 양쪽 모두에 존재하는 주문 회원만 결합하는 방식(inner)과 전체 회원을 모두 유지하는 방식(outer)을
 # 각각 수행하여 결측치(NaN) 포함 여부를 비교 출력하시오.
-# df_user = pd.DataFrame({'UID': [101, 102, 103], 'User': ['James', 'Emma', 'Lucas']})
-# df_order = pd.DataFrame({'UID': [102, 103, 104], 'Amount': [15000, 32000, 21000]})
+df_user = pd.DataFrame({'UID': [101, 102, 103], 'User': ['James', 'Emma', 'Lucas']})
+df_order = pd.DataFrame({'UID': [102, 103, 104], 'Amount': [15000, 32000, 21000]})
+
+x = pd.merge(df_user, df_order, on='UID' , how='inner')
+print( x )
+
+x = pd.merge(df_user, df_order, on='UID' , how='outer')
+print( x )
