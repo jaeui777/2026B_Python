@@ -40,10 +40,20 @@ print( df.isnull().sum())
 # - 주문 수량('Quantity') 컬럼에 포함된 비정상 데이터(-1, 999 등)를 정상 유효 범위인 1개 이상 10개 이하로 경계 조정(clip)하세요.
 df['Quantity'] = df['Quantity'].clip( lower = 1 , upper = 10)
 
+
 # [Step 4] 비즈니스 파생변수 생성
 # - 'Price'와 'Quantity'를 곱하여 총 주문 금액인 'Total_Amount' 파생 컬럼을 생성하세요.
+df['Total_Amount'] = df['Quantity'] * df['Price']
 # - 'Order_Date'를 날짜형(datetime)으로 변환한 뒤, 연도('Order_Year')와 월('Order_Month') 파생 컬럼을 각각 추출하세요.
-# - `mask` 메서드를 활용하여 'Total_Amount'가 300,000원 이상인 주문 건을 'VIP', 나머지를 'Normal'로 분류하는 'VIP_Flag' 파생 컬럼을 생성하세요.
+df['Order_Date'] = pd.to_datetime(df['Order_Date'])
+df['Order_Year'] = df['Order_Date'].dt.year
+print(df['Order_Year'])
+df['Order_Month'] = df['Order_Date'].dt.month
+print(df['Order_Month'])
+# - `mask` 메서드를 활용하여 'Total_Amount'가 300,000원 이상인 주문 건을 'VIP', 나머지를 'Normal'로 분류하는
+# 'VIP_Flag' 파생 컬럼을 생성하세요.
+df['VIP_Flag'] = 'Normal'
+df['VIP_Flag'] = df['VIP_Flag'].mask(df['Total_Amount']>=300000, 'VIP')
 
 # [Step 5] 집계 및 정렬 
 # - 카테고리('Category')별로 그룹화하여 다음 4가지 지표를 한 번에 다중 집계(agg)하세요.
@@ -52,9 +62,20 @@ df['Quantity'] = df['Quantity'].clip( lower = 1 , upper = 10)
 #   * 평균단가 : 'Price'의 평균(mean)
 # - 집계된 결과 테이블을 '총매출' 기준 내림차순(ascending=False)으로 정렬하여 출력하세요.
 
+new_df = df.groupby('Category').agg(
+    주문건수=('Order_ID', 'count'),
+    총매출=('Total_Amount', 'sum'),
+    평균단가=('Price', 'mean')
+)
+new_df = new_df.sort_values(by='총매출', ascending=False)
+print(new_df)
+
 # [Step 6] One-Hot Encoding
 # - 머신러닝 모델 입력을 위해 명목형 범주 변수인 'Payment'와 'VIP_Flag'를 원-핫 인코딩(get_dummies)하세요.
 # - 단, 결과값이 True/False가 아닌 1과 0의 정수형(dtype=int)으로 생성되도록 옵션을 지정하세요.
+
+new_df = pd.get_dummies(df, columns=['Payment' , 'VIP_Flag'], dtype=int)
+print(new_df)
 # ==============================================================================
 
 # [기본 제공 코드] CSV 파일 로드 및 구조 확인
