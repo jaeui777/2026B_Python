@@ -48,4 +48,6 @@ print( "Train Acc : " , model.score(X_train , Y_train)) #Accuracy
 print( "Train Acc : " , model.score(X_test, Y_test)) #Accuracy
 
 # 4) 타깃 / 종속 클래스의 불균형 ( 레드/화이트 와인 개수/비율 다르다)
-model = DecisionTreeClassifier()
+model = DecisionTreeClassifier(
+    
+)
